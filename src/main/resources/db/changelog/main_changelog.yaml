@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/main_changelog.yaml
+  - include:
+      file: db/changelog/create_role_enum_type_changelog.yaml
+  - include:
+      file: db/changelog/create_visibility_enum_type_changelog.yaml
+  - include:
+      file: db/changelog/create_tables_changelog.yaml
+  - include:
+      file: db/changelog/add_foreign_key_changelog.yaml
+  - include:
+      file: db/changelog/cast_type_changelog.yaml

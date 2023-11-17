@@ -1,0 +1,6 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_enum
+      author: romenka
+      changes:
+        - sql: CREATE TYPE role as ENUM ('USER', 'ADMIN')
