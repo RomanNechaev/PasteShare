@@ -8,9 +8,7 @@ import ru.nechaev.pasteshare.config.S3ConfigurationProperties;
 @SpringBootApplication
 @EnableConfigurationProperties(S3ConfigurationProperties.class)
 public class PasteShareApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(PasteShareApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(PasteShareApplication.class, args);
+    }
 }

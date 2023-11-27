@@ -1,7 +1,10 @@
 package ru.nechaev.pasteshare.entitity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.envers.Audited;
 
@@ -21,14 +24,13 @@ public class Paste {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @Audited(targetAuditMode = NOT_AUDITED)
     private User user;
     @Column(name = "title")
     private String title;
     @Column(name = "content_location")
-    @GeneratedValue
     private String contentLocation;
     @CreationTimestamp
     @Column(name = "created_at")

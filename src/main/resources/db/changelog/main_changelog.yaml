@@ -10,3 +10,17 @@ databaseChangeLog:
       file: db/changelog/add_foreign_key_changelog.yaml
   - include:
       file: db/changelog/cast_type_changelog.yaml
+  #  - include:
+  #      file: db/changelog/add_aud_sequence_changelog.yaml
+  #  - include:
+  #      file: db/changelog/create_audited_tables_changelog.yaml
+  #  - include:
+  #      file: db/changelog/add_primary_key_for_paste_aud_table_changelog.yaml
+  #  - include:
+  #      file: db/changelog/add_foreign_key_for_aud_changelog.yaml
+  - include:
+      file: db/changelog/add_deactivated_token_table_changelog.yaml
+  - include:
+      file: db/changelog/add_password_column__in_users.yaml
+  - include:
+      file: db/changelog/add_admin_changelog.yaml

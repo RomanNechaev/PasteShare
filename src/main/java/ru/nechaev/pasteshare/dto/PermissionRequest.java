@@ -1,15 +1,19 @@
 package ru.nechaev.pasteshare.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import ru.nechaev.pasteshare.util.Marker;
 
+import java.util.UUID;
+
 @Data
-public class PasteDto {
-    private String title;
-    private String expiredAt;
+@AllArgsConstructor
+public class PermissionRequest {
     @NotBlank(groups = Marker.OnCreate.class)
-    private String visibility;
+    private String username;
     @NotBlank(groups = Marker.OnCreate.class)
-    private String text;
+    private String publicPasteId;
+    @NotBlank(groups = Marker.OnUpdate.class)
+    private UUID id;
 }

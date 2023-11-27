@@ -2,6 +2,7 @@ package ru.nechaev.pasteshare.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.nechaev.pasteshare.exception.db.S3Exception;
 import ru.nechaev.pasteshare.service.S3Service;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -34,10 +35,14 @@ public class S3ServiceImpl implements S3Service {
 
     @Override
     public void putObject(String bucketName, String key, byte[] text) {
-        PutObjectRequest objectRequest = PutObjectRequest.builder()
-                .bucket(bucketName)
-                .key(key)
-                .build();
-        s3Client.putObject(objectRequest, RequestBody.fromBytes(text));
+        try {
+            PutObjectRequest objectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .build();
+            s3Client.putObject(objectRequest, RequestBody.fromBytes(text));
+        } catch (Exception e) {
+            throw new S3Exception(e.getMessage());
+        }
     }
 }

@@ -1,10 +1,7 @@
 package ru.nechaev.pasteshare.entitity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -16,6 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -32,6 +30,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "role")
     private Role role;
+    private String password;
 
     public User(String name, String email, LocalDateTime lastLogin, Role role) {
         this.name = name;
