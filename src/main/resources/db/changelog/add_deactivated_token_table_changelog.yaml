@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_deactivated_token_table
+      author: romenka
+      changes:
+        - createTable:
+            tableName: deactivated_token
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: keep_until
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  constraints:
+                    nullable: false
+                    checkConstraint: "CHECK ( keep_until > now() )"
