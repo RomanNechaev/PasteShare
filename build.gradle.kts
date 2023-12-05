@@ -14,6 +14,9 @@ val openAiWebMvcVersion = "2.2.0"
 val commonsCodecVersion = "1.15"
 val springBootStarterParentVersion = "3.1.5"
 val nimbusJoseJwtVersion = "9.31"
+val springBootTestContainersVersion = "3.2.0"
+val springKafkaVersion = "3.1.0"
+val testContainersVersion = "1.19.3"
 java {
     sourceCompatibility = JavaVersion.VERSION_17
 }
@@ -39,9 +42,14 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation(platform("software.amazon.awssdk:bom:$amazonAwsBomVersion"))
     implementation("software.amazon.awssdk:s3")
+    implementation("org.springframework.kafka:spring-kafka:$springKafkaVersion")
     implementation("commons-codec:commons-codec:$commonsCodecVersion")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.springframework.boot:spring-boot-starter-parent:$springBootStarterParentVersion")
+    implementation("org.springframework.boot:spring-boot-testcontainers:$springBootTestContainersVersion")
+    testImplementation("org.testcontainers:postgresql:$testContainersVersion")
+    testImplementation ("org.testcontainers:junit-jupiter:$testContainersVersion")
+
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.projectlombok:lombok")

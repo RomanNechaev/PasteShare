@@ -18,6 +18,15 @@ spring:
     jwt:
       token-ttl: 86400
       cookie-token-key: ${COOKIE_TOKEN_KEY}
+  kafka:
+    producer:
+      acks: -1
+      bootstrap-servers: localhost:9093
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    template:
+      default-topic: pastes
+
 aws:
   region: ru-central1
   endpoint: https://storage.yandexcloud.net

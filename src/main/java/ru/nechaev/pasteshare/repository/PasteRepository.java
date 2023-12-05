@@ -14,7 +14,6 @@ public interface PasteRepository extends JpaRepository<Paste, UUID> {
     @Query(value = "SELECT id, user_id, title, content_location, created_at, expired_at, visibility, last_visited, version" +
             " FROM public.paste_aud" +
             " WHERE paste_aud.content_location=?1 AND paste_aud.version=?2", nativeQuery = true)
-
     List<Paste> getPastesByUserId(UUID userId);
 
     void deleteByUserId(UUID userId);

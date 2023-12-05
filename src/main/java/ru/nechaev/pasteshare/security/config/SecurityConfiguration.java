@@ -49,7 +49,11 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
                                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/registration").permitAll()
+                                .requestMatchers("/swagger-ui/index.html").permitAll()
                                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/v1/user/**")).hasRole(Role.ADMIN.name())
+                                .requestMatchers(AntPathRequestMatcher.antMatcher("/v3/api-docs/**")).permitAll()
+                                .requestMatchers("/swagger-ui.html").permitAll()
+                                .requestMatchers(AntPathRequestMatcher.antMatcher("/swagger-ui/**")).permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

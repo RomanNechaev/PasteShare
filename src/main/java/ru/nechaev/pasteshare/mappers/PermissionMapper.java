@@ -15,7 +15,7 @@ public class PermissionMapper implements Mappable<PermissionResponse, Permission
         }
         return new PermissionResponse(
                 entity.getId(),
-                entity.getId(),
+                entity.getUser().getId(),
                 entity.getPaste().getId(),
                 entity.getCreatedAt()
         );

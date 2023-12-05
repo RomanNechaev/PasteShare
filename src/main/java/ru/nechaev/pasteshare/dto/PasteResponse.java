@@ -13,7 +13,7 @@ public class PasteResponse {
     private final UUID id;
     private final UUID user_id;
     private final String title;
-    private final String publicUserId;
+    private final String publicId;
     private final LocalDateTime createdAt;
     private final LocalDateTime expiredAt;
     private final Visibility visibility;

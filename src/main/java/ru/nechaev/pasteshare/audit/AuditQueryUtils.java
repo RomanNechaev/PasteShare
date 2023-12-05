@@ -1,6 +1,5 @@
 package ru.nechaev.pasteshare.audit;
 
-import lombok.NoArgsConstructor;
 import org.hibernate.envers.query.AuditQuery;
 
 import java.util.ArrayList;

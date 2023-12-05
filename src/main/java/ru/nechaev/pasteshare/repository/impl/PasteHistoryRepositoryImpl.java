@@ -49,7 +49,7 @@ public class PasteHistoryRepositoryImpl implements PasteHistoryRepository {
         AuditReader auditReader = AuditReaderFactory.get(entityManager);
         AuditQuery auditQuery = auditReader.createQuery()
                 .forRevisionsOfEntity(Paste.class, false, false)
-                .add(AuditEntity.property(publicId).eq(version))
+                .add(AuditEntity.property("contentLocation").eq(publicId))
                 .add(AuditEntity.property("version").eq(version));
 
         return AuditQueryUtils.getAuditQueryResults(auditQuery, Paste.class).stream().findFirst()
