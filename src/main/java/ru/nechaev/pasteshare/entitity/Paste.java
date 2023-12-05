@@ -18,7 +18,6 @@ import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Audited
 public class Paste {
     @Id

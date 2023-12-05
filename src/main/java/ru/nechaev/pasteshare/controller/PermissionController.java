@@ -56,10 +56,6 @@ public class PermissionController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "permission not found"),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "validation exception"
-                    )
             },
             parameters = {
                     @Parameter(
@@ -79,7 +75,7 @@ public class PermissionController {
         return ResponseEntity.ok(permissionMapper.toDto(permission));
     }
 
-    @Operation(summary = "delete a paste",
+    @Operation(summary = "delete a permission",
             responses = {
                     @ApiResponse(
                             responseCode = "204",

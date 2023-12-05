@@ -13,20 +13,17 @@ import java.util.UUID;
 public interface PasteService {
     Paste getById(UUID uuid);
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
     Paste create(@Valid PasteRequest paste);
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
     void delete(UUID uuid);
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
     Paste update(@Valid PasteRequest paste);
 
     Paste getPasteByPublicId(String publicId);
 
     Paste getPasteByVersion(UUID uuid, Long version);
 
-    String getPasteContent(UUID uuid);
+    String getPasteContent(Paste paste);
 
     Paste getPasteByVersionAndPublicId(String publicPasteId, Long version);
 

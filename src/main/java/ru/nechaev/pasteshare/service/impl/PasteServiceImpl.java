@@ -4,14 +4,13 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import ru.nechaev.pasteshare.config.S3ConfigurationProperties;
 import ru.nechaev.pasteshare.dto.PasteRequest;
 import ru.nechaev.pasteshare.dto.PermissionRequest;
-import ru.nechaev.pasteshare.entitity.Paste;
-import ru.nechaev.pasteshare.entitity.PasteHistory;
-import ru.nechaev.pasteshare.entitity.User;
-import ru.nechaev.pasteshare.entitity.Visibility;
+import ru.nechaev.pasteshare.entitity.*;
 import ru.nechaev.pasteshare.exception.access.PermissionDeniedEntityAccessException;
 import ru.nechaev.pasteshare.exception.db.EntityNotFoundException;
 import ru.nechaev.pasteshare.repository.PasteHistoryRepository;
@@ -28,6 +27,7 @@ import ru.nechaev.pasteshare.util.Verifier;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
@@ -56,6 +56,7 @@ public class PasteServiceImpl implements PasteService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Validated({Marker.OnCreate.class})
     public Paste create(@Valid PasteRequest pasteRequest) {
         String publicPasteUrl = UniqueUrlGenerator.generate();
@@ -83,6 +84,7 @@ public class PasteServiceImpl implements PasteService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void delete(UUID uuid) {
         if (!pasteRepository.existsById(uuid)) {
             throw new EntityNotFoundException("Paste not found");
@@ -92,6 +94,7 @@ public class PasteServiceImpl implements PasteService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Validated({Marker.OnUpdate.class})
     public Paste update(@Valid PasteRequest pasteRequest) {
         Paste paste = pasteRepository
@@ -116,6 +119,11 @@ public class PasteServiceImpl implements PasteService {
      */
     private void updatePasteFields(PasteRequest source, Paste target) {
         BeanUtils.copyProperties(source, target, verifier.getNullPropertyName(source));
+        if (source.getExpiredAt() != null) {
+            target.setExpiredAt(LocalDate.parse(
+                    source.getExpiredAt(),
+                    DateTimeFormatter.ISO_DATE).atStartOfDay());
+        }
     }
 
     @Override
@@ -128,10 +136,13 @@ public class PasteServiceImpl implements PasteService {
 
     @Override
     public Paste getPasteByVersion(UUID uuid, Long version) {
-        Paste paste = pasteRepository.findPasteByVersion(uuid, version)
+        if (!pasteRepository.existsById(uuid)) {
+            throw new EntityNotFoundException("Entity not found!");
+        }
+        PasteHistory pasteHistory = pasteHistoryRepository.findPasteByVersion(uuid, version)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Entity with version %d not found", version)));
-        checkPermission(paste);
-        return paste;
+        checkPermission(pasteHistory.paste());
+        return pasteHistory.paste();
     }
 
     private void checkPermission(Paste paste) {
@@ -141,10 +152,13 @@ public class PasteServiceImpl implements PasteService {
     }
 
     public Paste getPasteByVersionAndPublicId(String publicPasteId, Long version) {
-        Paste paste = pasteRepository.findPasteByVersionAndPublicId(publicPasteId, version)
+        if (!pasteRepository.existsByContentLocation(publicPasteId)) {
+            throw new EntityNotFoundException("Entity not found!");
+        }
+        PasteHistory pasteHistory = pasteHistoryRepository.findPasteByVersionAndPublicId(publicPasteId, version)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Entity with version %d not found", version)));
-        checkPermission(paste);
-        return paste;
+        checkPermission(pasteHistory.paste());
+        return pasteHistory.paste();
     }
 
     @Override
@@ -152,20 +166,23 @@ public class PasteServiceImpl implements PasteService {
         if (!userRepository.existsById(userId)) {
             throw new EntityNotFoundException("User not found!");
         }
+        User currentUser = userService.getCurrentUser();
+        if (currentUser.getRole() == Role.USER && userId != currentUser.getId()) {
+            throw new PermissionDeniedEntityAccessException("You dont have access to view this pastes");
+        }
         return pasteRepository.getPastesByUserId(userId);
     }
 
     @Override
     public List<PasteHistory> getAllPasteRevision(UUID pasteId) {
-        if (!pasteRepository.existsById(pasteId)) {
-            throw new EntityNotFoundException("Paste not found");
-        }
+        Paste paste = pasteRepository.findById(pasteId)
+                .orElseThrow(() -> new EntityNotFoundException("Paste not found"));
+        checkPermission(paste);
         return pasteHistoryRepository.getPasteRevisions(pasteId);
     }
 
     @Override
-    public String getPasteContent(UUID uuid) {
-        Paste paste = getById(uuid);
+    public String getPasteContent(Paste paste) {
         return new String(s3Service.getObject(
                 properties.getBucketName(),
                 getIdForStore(paste.getContentLocation(), paste.getVersion())), StandardCharsets.UTF_8);

@@ -11,7 +11,7 @@ import ru.nechaev.pasteshare.entitity.User;
 import java.util.UUID;
 
 public interface PermissionService {
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+
     Permission create(@Valid PermissionRequest permissionRequest);
 
     void delete(UUID uuid);

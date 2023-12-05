@@ -23,6 +23,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
+@Validated
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -39,11 +40,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Validated({Marker.OnCreate.class})
     public void create(@Valid AuthenticationRequest request) {
-        userRepository
-                .findUserByName(request.getUsername())
-                .ifPresent(exception -> {
-                    throw new EntityExistsException("Username already used! Input another name");
-                });
+        if (userRepository.existsByName(request.getUsername())) {
+            throw new EntityExistsException("Username already used! Input another name");
+        }
         User user = User.builder()
                 .name(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))

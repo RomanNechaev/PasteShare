@@ -15,6 +15,7 @@ import ru.nechaev.pasteshare.entitity.PasteHistory;
 import ru.nechaev.pasteshare.repository.PasteHistoryRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -33,9 +34,7 @@ public class PasteHistoryRepositoryImpl implements PasteHistoryRepository {
     @Override
     @Transactional(readOnly = true)
     public List<PasteHistory> getPasteRevisions(UUID pasteId) {
-
         AuditReader auditReader = AuditReaderFactory.get(entityManager);
-
         AuditQuery auditQuery = auditReader.createQuery()
                 .forRevisionsOfEntity(Paste.class, false, true)
                 .add(AuditEntity.id().eq(pasteId));
@@ -43,5 +42,29 @@ public class PasteHistoryRepositoryImpl implements PasteHistoryRepository {
         return AuditQueryUtils.getAuditQueryResults(auditQuery, Paste.class).stream()
                 .map(this::getPasteHistory)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<PasteHistory> findPasteByVersionAndPublicId(String publicId, Long version) {
+        AuditReader auditReader = AuditReaderFactory.get(entityManager);
+        AuditQuery auditQuery = auditReader.createQuery()
+                .forRevisionsOfEntity(Paste.class, false, false)
+                .add(AuditEntity.property(publicId).eq(version))
+                .add(AuditEntity.property("version").eq(version));
+
+        return AuditQueryUtils.getAuditQueryResults(auditQuery, Paste.class).stream().findFirst()
+                .map(this::getPasteHistory);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<PasteHistory> findPasteByVersion(UUID uuid, Long version) {
+        AuditReader auditReader = AuditReaderFactory.get(entityManager);
+        AuditQuery auditQuery = auditReader.createQuery()
+                .forRevisionsOfEntity(Paste.class, false, false)
+                .add(AuditEntity.id().eq(uuid))
+                .add(AuditEntity.property("version").eq(version));
+
+        return AuditQueryUtils.getAuditQueryResults(auditQuery, Paste.class).stream().findFirst()
+                .map(this::getPasteHistory);
     }
 }

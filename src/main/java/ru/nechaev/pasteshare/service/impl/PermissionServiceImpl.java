@@ -3,6 +3,8 @@ package ru.nechaev.pasteshare.service.impl;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import ru.nechaev.pasteshare.dto.PermissionRequest;
 import ru.nechaev.pasteshare.entitity.Paste;
@@ -26,6 +28,7 @@ public class PermissionServiceImpl implements PermissionService {
     private final PasteRepository pasteRepository;
 
     @Override
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Validated({Marker.OnCreate.class})
     public Permission create(@Valid PermissionRequest permissionRequest) {
         User user = userRepository.findUserByName(permissionRequest.getUsername()).orElseThrow(
@@ -41,6 +44,9 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public void delete(UUID uuid) {
+        if (!permissionRepository.existsById(uuid)) {
+            throw new EntityNotFoundException("Permission not found!");
+        }
         permissionRepository.deleteById(uuid);
     }
 

@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor
 public class AuditQueryUtils {
     public static <T> List<AuditQueryResult<T>> getAuditQueryResults(AuditQuery query, Class<T> targetType) {
 
