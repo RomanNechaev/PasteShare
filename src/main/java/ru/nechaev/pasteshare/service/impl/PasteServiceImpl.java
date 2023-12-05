@@ -56,7 +56,7 @@ public class PasteServiceImpl implements PasteService {
     }
 
     @Override
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     @Validated({Marker.OnCreate.class})
     public Paste create(@Valid PasteRequest pasteRequest) {
         String publicPasteUrl = UniqueUrlGenerator.generate();

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import ru.nechaev.pasteshare.dto.AuthenticationRequest;
 import ru.nechaev.pasteshare.entitity.Role;
@@ -39,6 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Validated({Marker.OnCreate.class})
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void create(@Valid AuthenticationRequest request) {
         if (userRepository.existsByName(request.getUsername())) {
             throw new EntityExistsException("Username already used! Input another name");
@@ -52,7 +55,7 @@ public class UserServiceImpl implements UserService {
                 .build();
         userRepository.save(user);
     }
-
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
     public void delete(UUID userId) {
         if (!userRepository.existsById(userId)) {
