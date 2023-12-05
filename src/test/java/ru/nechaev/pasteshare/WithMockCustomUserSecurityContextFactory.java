@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class WithMockCustomUserSecurityContextFactory implements WithSecurityContextFactory<WIthMockCustomUser> {
-    //TODO
     @Override
     public SecurityContext createSecurityContext(WIthMockCustomUser customUser) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
