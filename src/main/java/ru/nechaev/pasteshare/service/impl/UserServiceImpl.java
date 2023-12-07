@@ -55,6 +55,7 @@ public class UserServiceImpl implements UserService {
                 .build();
         userRepository.save(user);
     }
+
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
     public void delete(UUID userId) {
