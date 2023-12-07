@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+  zookeeper:
+    restart: always
+    image: docker.io/bitnami/zookeeper:3.8
+    ports:
+      - "2181:2181"
+    volumes:
+      - "zookeeper-volume:/bitnami"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+  kafka:
+    restart: always
+    image: docker.io/bitnami/kafka:3.3
+    ports:
+      - "9093:9093"
+    volumes:
+      - "kafka-volume:/bitnami"
+    env_file:
+      .env.kafka
+    depends_on:
+      - zookeeper
+volumes:
+  kafka-volume:
+  zookeeper-volume:

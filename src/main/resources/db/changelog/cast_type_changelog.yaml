@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: cast_type
+      author: romenka
+      changes:
+        - sql:
+            CREATE CAST (character varying as role) WITH INOUT AS IMPLICIT;
+        - sql:
+            CREATE CAST (character varying as visibility) WITH INOUT AS IMPLICIT;

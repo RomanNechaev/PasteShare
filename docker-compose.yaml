@@ -1,0 +1,29 @@
+version: '3.0'
+
+networks:
+  app:
+    driver: bridge
+
+volumes:
+  postgres-data:
+    driver: local
+
+services:
+  backend:
+    build: .
+    networks:
+      - app
+    env_file:
+      - .env
+    ports:
+      - '8080:8080'
+  postgres:
+    image: 'postgres:15.1-alpine'
+    networks:
+      - app
+    env_file:
+      - .env.test
+    ports:
+      - '5437:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data

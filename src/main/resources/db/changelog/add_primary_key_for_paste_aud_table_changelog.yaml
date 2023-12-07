@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: add_PK_for_paste_aud
+      author: romenka
+      changes:
+        - addPrimaryKey:
+            columnNames: id, rev
+            constraintName: pk_aud
+            schemaName: public
+            tableName: paste_aud

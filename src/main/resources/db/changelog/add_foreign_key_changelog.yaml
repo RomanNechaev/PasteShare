@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: addForeignKeyConstraint
+      author: romenka
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: permission
+            constraintName: fk_user
+            referencedTableName: users
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            baseColumnNames: paste_id
+            baseTableName: permission
+            constraintName: fk_paste
+            referencedTableName: paste
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: paste
+            constraintName: fk_paste2
+            referencedTableName: users
+            referencedColumnNames: id
+
+
