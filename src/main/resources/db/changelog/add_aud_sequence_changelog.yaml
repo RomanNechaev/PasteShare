@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: add_aud_seq
+      author: romenka
+      changes:
+        - createSequence:
+            sequenceName: custom_revinfo_seq
+            startValue: 1
+            incrementBy: 1

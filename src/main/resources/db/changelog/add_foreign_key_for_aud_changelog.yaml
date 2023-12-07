@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: addForeignKeyConstraint
+      author: romenka
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: rev
+            baseTableName: paste_aud
+            constraintName: fk_paste_revinfo
+            referencedTableName: revinfo
+            referencedColumnNames: rev

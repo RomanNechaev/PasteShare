@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-into-user
+      author: romenka
+      changes:
+        - insert:
+            tableName: users
+            schemaName: public
+            columns:
+              - column:
+                  name: id
+                  valueComputed: 'gen_random_uuid ()'
+              - column:
+                  name: name
+                  value: admin
+              - column:
+                  name: password
+                  value: ${ADMIN_PASSWORD}
+              - column:
+                  name: role
+                  value: ADMIN
+              - column:
+                  name: email
+                  value: "admin@admin.ru"

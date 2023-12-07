@@ -1,0 +1,60 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_audited_tables
+      author: romenka
+      changes:
+        - createTable:
+            tableName: paste_aud
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: rev
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: revtype
+                  type: smallint
+              - column:
+                  name: user_id
+                  type: uuid
+              - column:
+                  name: title
+                  type: varchar(50)
+              - column:
+                  name: content_location
+                  type: varchar(22)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  name: expired_at
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  name: visibility
+                  type: visibility
+              - column:
+                  name: last_visited
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: revinfo
+            columns:
+              - column:
+                  name: rev
+                  type: integer
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: revtstmp
+                  type: bigint
+
+
