@@ -1,6 +1,7 @@
 package ru.nechaev.pasteshare.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +103,12 @@ class PasteControllerTest {
                         status().isCreated()
                 );
         assertThat(pasteRepository.findAll()).hasSize(1);
+        Paste paste = pasteRepository.findAll().get(0);
+        Assertions.assertAll(
+                () -> assertThat(paste.getTitle()).isEqualTo(testPasteRequest.getTitle()),
+                () -> assertThat(paste.getVisibility().toString()).isEqualTo(testPasteRequest.getVisibility()),
+                () -> assertThat(paste.getVersion()).isEqualTo(1L)
+        );
     }
 
     @Test
@@ -242,7 +249,13 @@ class PasteControllerTest {
                         status().isOk()
                 );
         assertThat(pasteRepository.findAll()).hasSize(1);
-        assertThat(pasteRepository.findAll().get(0).getTitle()).isEqualTo(testPasteRequest.getTitle());
+        Paste paste = pasteRepository.findAll().get(0);
+        Assertions.assertAll(
+                () -> assertThat(paste.getTitle()).isEqualTo(testPasteRequest.getTitle()),
+                () -> assertThat(paste.getVisibility().toString()).isEqualTo(testPasteRequest.getVisibility()),
+                () -> assertThat(paste.getVersion()).isEqualTo(2L)
+        );
+
     }
 
     @Test

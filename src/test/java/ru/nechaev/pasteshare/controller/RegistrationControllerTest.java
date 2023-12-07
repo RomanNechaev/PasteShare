@@ -1,6 +1,7 @@
 package ru.nechaev.pasteshare.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +10,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 import ru.nechaev.pasteshare.dto.AuthenticationRequest;
+import ru.nechaev.pasteshare.entitity.User;
 import ru.nechaev.pasteshare.repository.PasteRepository;
 import ru.nechaev.pasteshare.repository.PermissionRepository;
 import ru.nechaev.pasteshare.repository.UserRepository;
@@ -46,6 +49,8 @@ public class RegistrationControllerTest {
     private UserRepository userRepository;
     @Autowired
     private PermissionRepository permissionRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private AuthenticationRequest authenticationRequest;
 
@@ -75,6 +80,11 @@ public class RegistrationControllerTest {
                         status().isCreated()
                 );
         assertThat(userRepository.findAll()).hasSize(1);
+        User user = userRepository.findAll().get(0);
+        Assertions.assertAll(
+                () -> assertThat(user.getName()).isEqualTo(authenticationRequest.getUsername()),
+                () -> assertThat(user.getEmail()).isEqualTo(authenticationRequest.getEmail())
+        );
     }
 
     @Test
@@ -100,6 +110,11 @@ public class RegistrationControllerTest {
                 );
 
         assertThat(userRepository.findAll()).hasSize(1);
+        User user = userRepository.findAll().get(0);
+        Assertions.assertAll(
+                () -> assertThat(user.getName()).isEqualTo(authenticationRequest.getUsername()),
+                () -> assertThat(user.getEmail()).isEqualTo(authenticationRequest.getEmail())
+        );
     }
 
     @Test
